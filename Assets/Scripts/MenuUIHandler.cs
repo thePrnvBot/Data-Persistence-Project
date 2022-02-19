@@ -20,7 +20,7 @@ public class MenuUIHandler : MonoBehaviour
     public void StartNew()
     {
         Debug.Log(userName);
-        DataManager.Instance.SaveUserData(userName, DataManager.Instance.HighScore);
+        DataManager.Instance.CurrentPlayer = userName;
         SceneManager.LoadScene(1);
     }
 

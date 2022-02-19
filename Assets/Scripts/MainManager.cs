@@ -13,6 +13,7 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public Text HighScoreText;
+    public string HighScoreHolder;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -24,9 +25,10 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         DataManager.Instance.LoadUserData();
-        //Load Highscore from save file
-        ScoreText.text = $"Score : {DataManager.Instance.Username} : {m_Points}";
         HighScoreText.text = $"Best score: {DataManager.Instance.Username} : {DataManager.Instance.HighScore}";
+        //Load Highscore from save file
+        ScoreText.text = $"Score : {DataManager.Instance.CurrentPlayer} : {m_Points}";
+        
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -71,7 +73,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {DataManager.Instance.Username} : {m_Points}";
+        ScoreText.text = $"Score : {DataManager.Instance.CurrentPlayer} : {m_Points}";
     }
 
     public void GameOver()
@@ -83,7 +85,7 @@ public class MainManager : MonoBehaviour
         if (m_Points > DataManager.Instance.HighScore)
         {
             DataManager.Instance.HighScore = m_Points;
-            DataManager.Instance.SaveUserData(DataManager.Instance.Username, m_Points);
+            DataManager.Instance.SaveUserData(DataManager.Instance.CurrentPlayer, m_Points);
         }
     }
 }
