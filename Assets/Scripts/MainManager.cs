@@ -9,6 +9,7 @@ public class MainManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
+    private int HighScore;
 
     public Text ScoreText;
     public Text HighScoreText;
@@ -22,6 +23,11 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DataManager.Instance.LoadUserData();
+        //Load Highscore from save file
+        ScoreText.text = $"Score : {DataManager.Instance.Username} : {m_Points}";
+        HighScoreText.text = $"Best score: {DataManager.Instance.Username} : {DataManager.Instance.HighScore}";
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -36,9 +42,6 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-
-        //HighScoreText.text = $"Best score: {DataManager.Instance.Username} : {DataManager.Instance.HighScore}";
-
     }
 
     private void Update()
@@ -68,12 +71,19 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"Score : {DataManager.Instance.Username} : {m_Points}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        // Set New HighScore
+        if (m_Points > DataManager.Instance.HighScore)
+        {
+            DataManager.Instance.HighScore = m_Points;
+            DataManager.Instance.SaveUserData(DataManager.Instance.Username, m_Points);
+        }
     }
 }
